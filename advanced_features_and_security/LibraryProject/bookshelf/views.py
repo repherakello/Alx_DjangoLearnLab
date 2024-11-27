@@ -1,11 +1,33 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Book
+from django.db.models import Q
+from django.http import HttpResponseBadRequest
 
-def book_list(request):
-    books = Book.objects.all()
+def search_books(request):
+    query = request.GET.get('q')
+    if not query:
+        return HttpResponseBadRequest("Missing search query")
+
+    # Secure way to filter books
+    books = Book.objects.filter(Q(title__icontains=query) | Q(author__icontains=query))
     return render(request, 'bookshelf/book_list.html', {'books': books})
 
 
+
+"""
+    '''''''
+"""
+# from django.shortcuts import render
+# from .models import Book
+
+# def book_list(request):
+#     books = Book.objects.all()
+#     return render(request, 'bookshelf/book_list.html', {'books': books})
+
+
+"""
+       '''''
+"""
 # from django.shortcuts import render, get_object_or_404
 # from django.contrib.auth.decorators import permission_required
 # from django.http import HttpResponse

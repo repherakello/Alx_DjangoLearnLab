@@ -1,23 +1,21 @@
-# Permissions and Groups Setup
+# Security Measures Implemented
 
-## Custom Permissions
-The `Article` model includes the following custom permissions:
-- `can_view`: Allows viewing articles.
-- `can_create`: Allows creating articles.
-- `can_edit`: Allows editing articles.
-- `can_delete`: Allows deleting articles.
+## 1. Secure Settings
+- `DEBUG` is set to `False` in production.
+- Cookie security enforced (`CSRF_COOKIE_SECURE`, `SESSION_COOKIE_SECURE`).
+- HTTP to HTTPS redirection (`SECURE_SSL_REDIRECT`).
+- HSTS is enabled with a 1-year duration (`SECURE_HSTS_SECONDS`).
 
-## Groups
-- **Viewers**: Can view articles (`can_view`).
-- **Editors**: Can view, create, and edit articles (`can_view`, `can_create`, `can_edit`).
-- **Admins**: Full access to all actions (`can_view`, `can_create`, `can_edit`, `can_delete`).
+## 2. CSRF Protection
+- All forms include `{% csrf_token %}` to protect against CSRF attacks.
 
-## Views
-Permissions are enforced using Django’s `@permission_required` decorator:
-- `article_list`: Requires `can_view`.
-- `article_create`: Requires `can_create`.
-- `article_edit`: Requires `can_edit`.
-- `article_delete`: Requires `can_delete`.
+## 3. Secure Data Access
+- Views use Django’s ORM to prevent SQL injection.
+- User input is validated before being used in queries.
 
-## Testing
-Assign users to groups and test access to each view to verify that permissions are enforced correctly.
+## 4. Content Security Policy (CSP)
+- A CSP header is configured using the `django-csp` middleware to control which sources are allowed for scripts, styles, and images.
+
+## Testing Approach:
+- Manually tested form submissions to ensure CSRF protection is in place.
+- Tested search functionality with various inputs to confirm secure handling of data.

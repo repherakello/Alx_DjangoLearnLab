@@ -23,8 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-xy2(cz&=0nq-!(qlm(p)7zsyc_7@m#&fb%0we@(uslinbtl5-c'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#1. Set DEBUG to false in production
+DEBUG = False
 
+#2. Define allowed hosts.
 ALLOWED_HOSTS = []
 
 
@@ -125,3 +127,33 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+#3. Secure browser protections
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'  # Prevent clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME-based attacks
+
+# 4. Cookie security settings.
+CSRF_COOKIE_SECURE = True  # Ensure CSRF cookies are sent over HTTPS only
+SESSION_COOKIE_SECURE = True  # Ensure session cookies are sent over HTTPS only
+CSRF_USE_SESSIONS = True  # Store CSRF tokens in sessions for additional security
+
+# 5. Use HTTPS.
+SECURE_SSL_REDIRECT = True  # Redirect all HTTP to HTTPS
+
+# 6. HSTS settings.
+SECURE_HSTS_SECONDS = 31536000  # Enforce HTTPS for one year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# 7. Add custom headers.
+SECURE_REFERRER_POLICY = 'no-referrer-when-downgrade'
+
+INSTALLED_APPS += ['csp']
+
+# Basic CSP setup
+CSP_DEFAULT_SRC = ("'self'",)  # Only allow content from the same domain
+CSP_SCRIPT_SRC = ("'self'", 'https://trusted-cdn.com')  # Allow scripts only from trusted sources
+CSP_STYLE_SRC = ("'self'", 'https://trusted-cdn.com')
+CSP_IMG_SRC = ("'self'", 'data:', 'https://trusted-cdn.com')
+CSP_FONT_SRC = ("'self'", 'https://trusted-cdn.com')
