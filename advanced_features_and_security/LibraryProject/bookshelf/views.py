@@ -11,19 +11,20 @@ def search_books(request):
     # Secure way to filter books
     books = Book.objects.filter(Q(title__icontains=query) | Q(author__icontains=query))
     return render(request, 'bookshelf/book_list.html', {'books': books})
-from django.shortcuts import render, redirect
-from .forms import BookForm
+from django.shortcuts import render
+from .forms import ExampleForm
 
-def add_book(request):
+def example_view(request):
     if request.method == 'POST':
-        form = BookForm(request.POST)
+        form = ExampleForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('book_list')
+            # Handle form data
+            print(form.cleaned_data)
+            return render(request, 'bookshelf/success.html')
     else:
-        form = BookForm()
+        form = ExampleForm()
 
-    return render(request, 'bookshelf/add_book.html', {'form': form})
+    return render(request, 'bookshelf/example_form.html', {'form': form})
 
 
 
