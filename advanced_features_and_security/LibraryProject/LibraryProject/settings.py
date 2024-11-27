@@ -140,6 +140,8 @@ CSRF_USE_SESSIONS = True  # Store CSRF tokens in sessions for additional securit
 
 # 5. Use HTTPS.
 SECURE_SSL_REDIRECT = True  # Redirect all HTTP to HTTPS
+# Django setting to trust the proxy header for secure connection information
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # 6. HSTS settings.
 SECURE_HSTS_SECONDS = 31536000  # Enforce HTTPS for one year
