@@ -3,6 +3,8 @@ from rest_framework.generics import ListAPIView
 from .models import Book
 from .serializers import BookSerializer
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
+from .permissions import IsOwnerOrReadOnly
 
 # Create your views here.
 class BookList(ListAPIView):
@@ -14,7 +16,10 @@ class BookList(ListAPIView):
 
 class BookViewSet(ModelViewSet):
     """
-    A viewset for handling CRUD operations for the Book model.
+     ViewSet for managing books. Requires authentication for all actions.
+    - Permissions:
+        * IsAuthenticated: Users must be logged in to access.
     """
     serializer_class = BookSerializer
     queryset = Book.objects.all()
+    permission_classes = [IsAuthenticated]
