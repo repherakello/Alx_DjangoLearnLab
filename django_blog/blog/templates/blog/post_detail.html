@@ -1,10 +1,25 @@
-{% extends "base.html" %}
-{% block content %}
-<h1>{{ post.title }}</h1>
-<p>{{ post.content }}</p>
-<small>By {{ post.author }} on {{ post.published_date }}</small>
-{% if user == post.author %}
-    <a href="{{ post.get_update_url }}">Edit</a>
-    <a href="{{ post.get_delete_url }}">Delete</a>
+<h3>Comments</h3>
+<ul>
+    {% for comment in post.comments.all %}
+        <li>
+            <strong>{{ comment.author }}</strong>: {{ comment.content }}
+            <small>{{ comment.created_at }}</small>
+            {% if user == comment.author %}
+                <a href="{% url 'comment-edit' comment.id %}">Edit</a>
+                <a href="{% url 'comment-delete' comment.id %}">Delete</a>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+
+{% if user.is_authenticated %}
+    <h4>Leave a Comment:</h4>
+    <form method="post" action="{% url 'comment-add' post.id %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+{% else %}
+    <p><a href="{% url 'login' %}">Log in</a> to leave a comment.</p>
 {% endif %}
-{% endblock %}
+
